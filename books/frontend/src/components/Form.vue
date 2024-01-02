@@ -1,42 +1,51 @@
-<script>
-import axios from 'axios'
-
-
-export default {
-    mounted(){
-        axios.get('http://127.0.0.1:8000/api/books')
-        .then(response => {
-            console.log(response.data)
-        })
-        .catch(error => {
-            console.error('Error fetching data: ', error)
-        })
-    },
-}
-
-
-</script>
-
 <template>
-<form action="" method="post" class="form-storing">
-    <label for="title">Book Title</label>
-    <input type="text" name="" id="">
-    <label for="summary">Book Summary</label>
-    <input type="text" name="" id="">
-    <label for="">Book Published Date</label>
-    <input type="datetime" name="" id="">
-    <label for="">Author:</label>
-    <select name="" id=""></select>
-    <label for="Genre">Genre</label>
-    <select name="" id=""></select>
-    <input type="file" accept="image/">
-    <button @click.prevent='addBook'>Add Book</button>
-</form>
-</template>
+    <div>
+      <form @submit.prevent="submitForm">
+        <label for="title">Title:</label>
+        <input v-model="newBook.genre_name" type="text" id="title" required>
+  
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </template>
+  
+  <script>
+  import axios from 'axios';
+  
+  export default {
+    name: 'Content',
+    data() {
+      return {
+        newBook: {
+          genre_name: '',
+        },
+      };
+    },
+    methods: {
+      submitForm() {
+        // Send a POST request to your Django API endpoint
+        axios.post('http://127.0.0.1:8000/api/genres/', this.newBook)
+          .then(response => {
+            console.log('Book added successfully:', response.data);
+            // Optionally, you can reset the form or perform other actions
+            this.resetForm();
+          })
+          .catch(error => {
+            console.error('Error adding book:', error);
+          });
+      },
+      resetForm() {
+        // Reset the form fields
+        this.newBook = {
+          genre_name: '',
 
-<style scoped>
-
-
-
-
-</style>
+        };
+      },
+    },
+  };
+  </script>
+  
+  <style scoped>
+  /* Add your component-specific styles here */
+  </style>
+  
